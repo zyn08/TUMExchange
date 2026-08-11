@@ -1,0 +1,24 @@
+# Private exchange, visa, school and personal administrative materials
+交流资料/
+
+# Windows metadata
+desktop.ini
+
+# Common local/editor/build artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/
+dist/
+build/
+coverage/
+__pycache__/
+*.py[cod]
+*.class
+*.log
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
