@@ -18,7 +18,7 @@
 
 > **Object locations constantly change, but they are not continuously tracked or managed.**
 
-这是当前工作版本，不应被悄然改成“没有机器人”之类的技术结论。若后续研究显示它过宽或不够贴近用户，应在 [Consistency Check](Consistency.md) 中记录理由，再由团队确认。
+这是当前工作版本，不应被悄然改成“没有机器人”之类的技术结论。若后续研究显示它过宽或不够贴近用户，应在 [Consistency Check](08-consistency-check.md) 中记录理由，再由团队确认。
 
 ## How Might We
 

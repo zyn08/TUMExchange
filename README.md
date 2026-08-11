@@ -18,28 +18,28 @@
 ## 建议阅读顺序
 
 1. [AGENTS.md](AGENTS.md) — 项目最高优先级规则与完整背景
-2. [ProjectDocs/CourseRules.md](ProjectDocs/CourseRules.md) — 课程方法和评分要求
-3. [ProjectDocs/ProjectBrief.md](ProjectDocs/ProjectBrief.md) — 当前项目简报
-4. [ProjectDocs/Problem.md](ProjectDocs/Problem.md) — 问题、5 Whys、Root Cause、HMW
-5. [ProjectDocs/Solution.md](ProjectDocs/Solution.md) — 方案概念与 MVP 边界
-6. [ProjectDocs/Consistency.md](ProjectDocs/Consistency.md) — 当前逻辑一致性检查
-7. [ProjectDocs/Roadmap.md](ProjectDocs/Roadmap.md) — 从现在到答辩的 TODO / Roadmap
+2. [ProjectDocs/00-course-requirements.md](ProjectDocs/00-course-requirements.md) — 课程方法和评分要求
+3. [ProjectDocs/01-project-brief.md](ProjectDocs/01-project-brief.md) — 当前项目简报
+4. [ProjectDocs/02-problem-analysis.md](ProjectDocs/02-problem-analysis.md) — 问题、5 Whys、Root Cause、HMW
+5. [ProjectDocs/03-solution-concept.md](ProjectDocs/03-solution-concept.md) — 方案概念与 MVP 边界
+6. [ProjectDocs/08-consistency-check.md](ProjectDocs/08-consistency-check.md) — 当前逻辑一致性检查
+7. [ProjectDocs/07-roadmap-and-todo.md](ProjectDocs/07-roadmap-and-todo.md) — 从现在到答辩的 TODO / Roadmap
 
 ## 文档结构
 
 ```text
 AGENTS.md                       长期项目规则与权威背景
-ReadMe.md                       项目入口
+README.md                       项目入口
 ProjectDocs/
-  CourseRules.md                课程要求与 5 分钟限制
-  ProjectBrief.md               项目一页简报
-  Problem.md                    问题分析与 5 Whys
-  Solution.md                   方案、MVP 与 Embodied Intelligence
-  Business.md                   Business Model Canvas 工作版本
-  Pitch.md                      最终汇报结构、英文表达和时间预算
-  Research.md                   研究记录与来源规范
-  Roadmap.md                    倒推式路线图与 TODO
-  Consistency.md                Problem 到 Business 的一致性检查
+  00-course-requirements.md     课程要求与 5 分钟限制
+  01-project-brief.md           项目一页简报
+  02-problem-analysis.md        问题分析与 5 Whys
+  03-solution-concept.md        方案、MVP 与 Embodied Intelligence
+  04-business-model.md          Business Model Canvas 工作版本
+  05-final-presentation.md      最终汇报结构、英文表达和时间预算
+  06-research-and-references.md 研究记录与来源规范
+  07-roadmap-and-todo.md        倒推式路线图与 TODO
+  08-consistency-check.md       Problem 到 Business 的一致性检查
 ProjectResearch/                后续研究材料与引用记录
 Assets/                         后续展示图片、图标、原型素材等
 Documents/                      原有学校、出行和行政材料，不与项目知识文档混用
