@@ -18,19 +18,19 @@
 ## 建议阅读顺序
 
 1. [AGENTS.md](AGENTS.md) — 项目最高优先级规则与完整背景
-2. [ProjectDocs/00-course-requirements.md](ProjectDocs/00-course-requirements.md) — 课程方法和评分要求
-3. [ProjectDocs/01-project-brief.md](ProjectDocs/01-project-brief.md) — 当前项目简报
-4. [ProjectDocs/02-problem-analysis.md](ProjectDocs/02-problem-analysis.md) — 问题、5 Whys、Root Cause、HMW
-5. [ProjectDocs/03-solution-concept.md](ProjectDocs/03-solution-concept.md) — 方案概念与 MVP 边界
-6. [ProjectDocs/08-consistency-check.md](ProjectDocs/08-consistency-check.md) — 当前逻辑一致性检查
-7. [ProjectDocs/07-roadmap-and-todo.md](ProjectDocs/07-roadmap-and-todo.md) — 从现在到答辩的 TODO / Roadmap
+2. [Docs/00-course-requirements.md](Docs/00-course-requirements.md) — 课程方法和评分要求
+3. [Docs/01-project-brief.md](Docs/01-project-brief.md) — 当前项目简报
+4. [Docs/02-problem-analysis.md](Docs/02-problem-analysis.md) — 问题、5 Whys、Root Cause、HMW
+5. [Docs/03-solution-concept.md](Docs/03-solution-concept.md) — 方案概念与 MVP 边界
+6. [Docs/08-consistency-check.md](Docs/08-consistency-check.md) — 当前逻辑一致性检查
+7. [Docs/07-roadmap-and-todo.md](Docs/07-roadmap-and-todo.md) — 从现在到答辩的 TODO / Roadmap
 
 ## 文档结构
 
 ```text
 AGENTS.md                       长期项目规则与权威背景
 README.md                       项目入口
-ProjectDocs/
+Docs/
   00-course-requirements.md     课程要求与 5 分钟限制
   01-project-brief.md           项目一页简报
   02-problem-analysis.md        问题分析与 5 Whys
@@ -40,7 +40,7 @@ ProjectDocs/
   06-research-and-references.md 研究记录与来源规范
   07-roadmap-and-todo.md        倒推式路线图与 TODO
   08-consistency-check.md       Problem 到 Business 的一致性检查
-ProjectResearch/                后续研究材料与引用记录
+Research/                       后续研究材料与引用记录
 Assets/                         后续展示图片、图标、原型素材等
 Documents/                      原有学校、出行和行政材料，不与项目知识文档混用
 ```
@@ -51,4 +51,4 @@ Documents/                      原有学校、出行和行政材料，不与项
 
 ## 协作规则
 
-`AGENTS.md` 是长期规则；具体内容放在 `ProjectDocs/` 中，避免在多个文件重复维护同一段核心叙述。任何改变核心选题或 Root Cause 的建议，都应先作为 Open Question / Risk 记录并由团队确认。
+`AGENTS.md` 是长期规则；具体内容放在 `Docs/` 中，避免在多个文件重复维护同一段核心叙述。任何改变核心选题或 Root Cause 的建议，都应先作为 Open Question / Risk 记录并由团队确认。
