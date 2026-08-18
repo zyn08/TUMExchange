@@ -9,6 +9,7 @@ desktop.ini
 Thumbs.db
 .vscode/
 .idea/
+.superpowers/
 node_modules/
 dist/
 build/

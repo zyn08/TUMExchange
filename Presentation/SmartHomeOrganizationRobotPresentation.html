@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Where Are My Keys? — Smart Home Organization Robot</title>
+  <style>
+    :root {
+      --paper: #f5f0e7;
+      --paper-deep: #ece2d2;
+      --ink: #2f2923;
+      --muted: #756a5e;
+      --terracotta: #b6634b;
+      --terracotta-light: #dfad92;
+      --olive: #697257;
+      --olive-light: #cfd3b7;
+      --line: #d7c9b9;
+      --cream: #fffaf2;
+      --shadow: 0 24px 70px rgba(68, 48, 32, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font: inherit; }
+    #deck { width: 100vw; height: 100vh; position: relative; cursor: pointer; }
+    .slide {
+      display: none;
+      position: absolute;
+      inset: 0;
+      min-height: 100%;
+      overflow: hidden;
+      padding: 7.2vh 8.5vw 8.5vh;
+      background: var(--paper);
+    }
+    .slide.active { display: flex; animation: enter .52s cubic-bezier(.22,.8,.25,1) both; }
+    @keyframes enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      margin: 0 0 1.25rem;
+      color: var(--terracotta);
+      font-size: clamp(.72rem, 1.15vw, 1rem);
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 2.5rem; height: 1px; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2 {
+      max-width: 12ch;
+      margin-bottom: .3em;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .94;
+    }
+    h1 { font-size: clamp(4rem, 8.3vw, 9.1rem); }
+    h2 { font-size: clamp(3rem, 5.9vw, 6.7rem); }
+    h3 { font-size: clamp(1rem, 1.55vw, 1.55rem); }
+    .lead { max-width: 34rem; margin-bottom: 0; color: var(--muted); font-size: clamp(1.1rem, 1.85vw, 2rem); line-height: 1.4; }
+    .small { font-size: clamp(.85rem, 1.2vw, 1.12rem); line-height: 1.45; }
+    .speaker { position: absolute; right: 8.5vw; top: 7.4vh; color: var(--muted); font-size: clamp(.72rem, 1vw, .9rem); letter-spacing: .09em; text-transform: uppercase; }
+    .speaker strong { color: var(--terracotta); }
+    .accent { color: var(--terracotta); }
+    .olive { color: var(--olive); }
+
+    #counter { position: fixed; right: 3.2vw; bottom: 3vh; z-index: 20; color: var(--terracotta); font-size: .85rem; font-weight: 800; letter-spacing: .12em; }
+    #hint { position: fixed; left: 3.2vw; bottom: 3vh; z-index: 20; color: var(--muted); font-size: .78rem; letter-spacing: .04em; }
+    #progress { position: fixed; left: 0; bottom: 0; z-index: 20; width: 100%; height: 4px; background: rgba(105,114,87,.14); }
+    #progress > span { display: block; width: 14.285%; height: 100%; background: var(--terracotta); transition: width .35s ease; }
+
+    /* 1 — Hook */
+    .hook { align-items: center; }
+    .hook-copy { width: 56%; align-self: center; z-index: 2; }
+    .hook-copy h1 { max-width: 7.5ch; }
+    .hook-art { position: absolute; right: 4vw; bottom: -9vh; width: min(48vw, 720px); height: min(70vh, 720px); }
+    .sun { position: absolute; top: 8%; right: 18%; width: 68%; aspect-ratio: 1; border-radius: 50%; background: var(--paper-deep); }
+    .key-card { position: absolute; right: 7%; top: 22%; width: 68%; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid rgba(182,99,75,.25); border-radius: 50%; background: rgba(255,250,242,.45); transform: rotate(-8deg); box-shadow: var(--shadow); }
+    .key-card::before, .key-card::after { content: ""; position: absolute; border-radius: 50%; }
+    .key-card::before { width: 76%; height: 76%; border: 1px dashed rgba(105,114,87,.45); }
+    .key-card::after { width: 8%; height: 8%; right: 13%; top: 22%; background: var(--olive); }
+    .key-svg { width: 48%; color: var(--terracotta); filter: drop-shadow(8px 12px 8px rgba(74,51,36,.15)); }
+    .mini-note { position: absolute; left: 4%; bottom: 20%; max-width: 13rem; padding: 1rem 1.15rem; color: var(--ink); background: var(--cream); border: 1px solid var(--line); box-shadow: 9px 12px 0 rgba(215,201,185,.58); transform: rotate(5deg); }
+
+    /* 2 — Problem */
+    .problem { align-items: center; gap: 5vw; }
+    .problem-copy { width: 48%; align-self: center; }
+    .room-scene { width: 44%; min-width: 340px; aspect-ratio: 1.05; align-self: center; position: relative; border: 1px solid var(--line); background: var(--cream); box-shadow: var(--shadow); }
+    .room-title { position: absolute; left: 7%; top: 8%; color: var(--muted); font-size: .8rem; letter-spacing: .13em; text-transform: uppercase; }
+    .room-grid { position: absolute; inset: 18% 8% 10%; display: grid; grid-template-columns: 1.1fr .9fr; grid-template-rows: 1fr .8fr; gap: .7rem; }
+    .zone { position: relative; border: 1px solid var(--line); background: #f8f1e7; }
+    .zone span { position: absolute; left: .55rem; top: .5rem; color: var(--muted); font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; }
+    .bed { grid-row: 1 / span 2; }
+    .bed::after { content: ""; position: absolute; left: 13%; right: 13%; top: 24%; bottom: 12%; border: 8px solid #dbc9b8; border-radius: 8px; }
+    .desk::after { content: ""; position: absolute; left: 18%; right: 18%; bottom: 22%; height: 18%; background: #b5896e; border-bottom: 8px solid #825f4e; }
+    .shelf::after { content: ""; position: absolute; left: 20%; right: 20%; top: 30%; height: 5px; background: var(--olive); box-shadow: 0 27px 0 var(--olive), 0 54px 0 var(--olive); }
+    .lost-item { position: absolute; display: grid; place-items: center; width: 2.8rem; height: 2.8rem; color: var(--cream); background: var(--terracotta); border-radius: 50%; font-size: 1.25rem; box-shadow: 0 6px 12px rgba(182,99,75,.3); }
+    .item-key { left: 22%; top: 42%; } .item-earbuds { right: 17%; bottom: 16%; } .item-cable { right: 18%; top: 28%; }
+    .cost-row { display: flex; gap: 1.2rem; margin-top: 2rem; }
+    .cost { display: grid; gap: .15rem; min-width: 7rem; padding-top: .8rem; border-top: 2px solid var(--terracotta); color: var(--muted); font-size: .85rem; }
+    .cost b { color: var(--ink); font-size: 1.08rem; }
+
+    /* 3 — Why */
+    .why { flex-direction: column; justify-content: center; }
+    .why h2 { max-width: 15ch; }
+    .why-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; margin-top: 4vh; }
+    .why-card { min-height: 13vh; padding: 1.2rem 1.1rem; border-top: 2px solid var(--line); }
+    .why-card:last-child { border-color: var(--terracotta); background: rgba(182,99,75,.08); }
+    .why-card b { display: block; margin-bottom: .6rem; color: var(--terracotta); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+    .why-card p { margin: 0; color: var(--muted); font-size: clamp(.75rem, 1.18vw, 1.05rem); line-height: 1.35; }
+    .hmw { margin-top: 3.5vh; padding: 1.2rem 0 0; color: var(--olive); border-top: 1px solid var(--olive-light); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.2rem, 2.1vw, 2.1rem); line-height: 1.25; }
+    .hmw b { color: var(--ink); }
+
+    /* 4 — Alternatives */
+    .alternatives { flex-direction: column; justify-content: center; }
+    .alternative-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; margin-top: 4vh; }
+    .alternative { min-height: 25vh; padding: 1.4rem; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--line); background: rgba(255,250,242,.45); }
+    .alternative .icon { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: 50%; color: var(--olive); background: var(--olive-light); font-size: 1.25rem; }
+    .alternative h3 { margin: .9rem 0 .3rem; font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+    .alternative p { margin: 0; color: var(--muted); font-size: clamp(.72rem,1vw,.92rem); line-height: 1.35; }
+    .alternative.selected { color: var(--cream); border-color: var(--terracotta); background: var(--terracotta); box-shadow: var(--shadow); transform: translateY(-1.2rem); }
+    .alternative.selected .icon { color: var(--terracotta); background: var(--cream); }
+    .alternative.selected p { color: #fff0e8; }
+    .choice-line { margin-top: 3vh; color: var(--muted); font-size: clamp(.95rem,1.4vw,1.35rem); }
+    .choice-line b { color: var(--terracotta); }
+
+    /* 5 — Experience */
+    .experience { flex-direction: column; justify-content: center; }
+    .experience-head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; }
+    .experience-head h2 { max-width: 12ch; }
+    .experience-head .small { max-width: 18rem; color: var(--muted); }
+    .action-line { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; width: 100%; margin-top: 3vh; }
+    .action { position: relative; min-height: 29vh; padding: 1.45rem; border: 1px solid var(--line); background: var(--cream); overflow: hidden; }
+    .action::after { content: ""; position: absolute; right: -1.2rem; bottom: -2.4rem; width: 8rem; height: 8rem; border-radius: 50%; background: rgba(105,114,87,.13); }
+    .action:nth-child(2)::after { background: rgba(182,99,75,.14); }
+    .action:nth-child(3)::after { background: rgba(105,114,87,.18); }
+    .action:nth-child(4)::after { background: rgba(182,99,75,.19); }
+    .action-number { color: var(--terracotta); font-size: .75rem; font-weight: 800; letter-spacing: .12em; }
+    .action h3 { position: relative; z-index: 1; margin: 1.8rem 0 .55rem; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.8rem,3.2vw,3.5rem); font-weight: 500; letter-spacing: -.05em; }
+    .action p { position: relative; z-index: 1; margin: 0; max-width: 13rem; color: var(--muted); font-size: clamp(.78rem, 1.12vw, 1rem); line-height: 1.4; }
+    .action span { position: absolute; z-index: 2; right: 1.2rem; bottom: 1rem; color: var(--olive); font-size: 2rem; }
+
+    /* 6 — MVP */
+    .mvp { align-items: center; gap: 5vw; }
+    .mvp-copy { width: 50%; align-self: center; }
+    .mvp-copy h2 { max-width: 8ch; }
+    .mvp-points { display: grid; gap: .65rem; margin-top: 2.5rem; }
+    .mvp-point { display: flex; gap: .75rem; align-items: center; color: var(--muted); font-size: clamp(.9rem,1.3vw,1.2rem); }
+    .mvp-point i { width: 1.55rem; height: 1.55rem; display: grid; place-items: center; border-radius: 50%; color: var(--cream); background: var(--olive); font-style: normal; font-size: .8rem; }
+    .mvp-art { position: relative; width: 42%; min-width: 340px; aspect-ratio: 1; align-self: center; border-radius: 50%; background: var(--paper-deep); }
+    .mvp-art::before { content: ""; position: absolute; inset: 12%; border: 1px dashed var(--terracotta); border-radius: 50%; }
+    .robot { position: absolute; left: 31%; top: 33%; z-index: 2; width: 38%; height: 42%; }
+    .robot-head { width: 100%; height: 42%; border: 8px solid var(--ink); border-radius: 45% 45% 38% 38%; background: var(--cream); }
+    .robot-face { display: flex; align-items: center; justify-content: space-evenly; height: 100%; }
+    .robot-eye { width: 13%; aspect-ratio: 1; border-radius: 50%; background: var(--olive); }
+    .robot-body { width: 68%; height: 47%; margin: -2px auto 0; border: 8px solid var(--ink); border-radius: 20% 20% 42% 42%; background: var(--terracotta-light); }
+    .robot-wheel { position: absolute; bottom: -4%; width: 20%; aspect-ratio: 1; border: 6px solid var(--ink); border-radius: 50%; background: var(--cream); }
+    .wheel-left { left: 11%; } .wheel-right { right: 11%; }
+    .orbit-object { position: absolute; display: grid; place-items: center; width: 3.3rem; height: 3.3rem; border-radius: 50%; color: var(--terracotta); background: var(--cream); box-shadow: 0 7px 16px rgba(80,59,42,.13); font-size: 1.4rem; }
+    .orbit-one { left: 9%; top: 28%; } .orbit-two { right: 11%; top: 20%; } .orbit-three { right: 5%; bottom: 25%; }
+    .scope-tag { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); width: max-content; padding: .65rem .9rem; color: var(--olive); border: 1px solid var(--olive-light); background: var(--cream); font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+
+    /* 7 — Closing */
+    .closing-slide { flex-direction: column; justify-content: center; }
+    .closing-slide h2 { max-width: 10ch; }
+    .value-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 5vw; align-items: end; margin-top: 1.5vh; }
+    .value-note { padding: 1.45rem; border-left: 3px solid var(--terracotta); color: var(--muted); background: rgba(255,250,242,.45); font-size: clamp(.9rem,1.25vw,1.2rem); line-height: 1.5; }
+    .value-note b { color: var(--ink); }
+    .final-line { max-width: 35rem; margin-top: 4vh; color: var(--olive); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.3rem,2.25vw,2.25rem); line-height: 1.18; }
+    .final-key { position: absolute; right: 10%; bottom: 10%; width: 15vw; max-width: 190px; color: var(--terracotta); opacity: .8; transform: rotate(-16deg); }
+
+    @media (max-width: 850px) {
+      .slide { padding: 8vh 8vw; }
+      .hook-copy, .problem-copy, .mvp-copy { width: 100%; }
+      .hook-art { opacity: .35; right: -8vw; }
+      .problem, .mvp { gap: 0; }
+      .room-scene, .mvp-art { display: none; }
+      .why-grid, .alternative-row, .action-line { grid-template-columns: repeat(2, 1fr); }
+      .why-card:last-child, .alternative:last-child { grid-column: span 2; }
+      .experience-head { display: block; }
+      .speaker { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main id="deck" aria-label="Smart Home Organization Robot presentation">
+    <section class="slide active hook" data-speaker="1" aria-label="Lost Keys">
+      <span class="speaker"><strong>Speaker 1</strong> · 1 / 7</span>
+      <div class="hook-copy">
+        <p class="eyebrow">A familiar morning</p>
+        <h1>“Where are<br>my keys?”</h1>
+        <p class="lead">A small problem can make a student late, stressed, and frustrated.</p>
+      </div>
+      <div class="hook-art" aria-hidden="true">
+        <div class="sun"></div>
+        <div class="key-card">
+          <svg class="key-svg" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+            <circle cx="70" cy="76" r="38" stroke="currentColor" stroke-width="18"/>
+            <path d="M99 103L170 174M143 147L158 132M160 164L177 147" stroke="currentColor" stroke-width="18" stroke-linecap="square"/>
+          </svg>
+        </div>
+        <div class="mini-note small"><b>It is not lost.</b><br>It is somewhere in the room.</div>
+      </div>
+    </section>
+
+    <section class="slide problem" data-speaker="1" aria-label="The recurring problem">
+      <span class="speaker"><strong>Speaker 1</strong> · 2 / 7</span>
+      <div class="problem-copy">
+        <p class="eyebrow">The recurring problem</p>
+        <h2>Small things move.<br><span class="accent">Searching</span> takes time.</h2>
+        <p class="lead">Keys, earphones, charging cables — usually somewhere in the room, but not where we expect.</p>
+        <div class="cost-row" aria-label="Problem costs">
+          <div class="cost"><b>Time</b><span>searching again</span></div>
+          <div class="cost"><b>Stress</b><span>before leaving</span></div>
+          <div class="cost"><b>Effort</b><span>organizing again</span></div>
+        </div>
+      </div>
+      <div class="room-scene" aria-label="A dorm room with objects in changing locations">
+        <span class="room-title">One shared dorm room</span>
+        <div class="room-grid">
+          <div class="zone bed"><span>bed</span><i class="lost-item item-key">⌁</i></div>
+          <div class="zone desk"><span>desk</span><i class="lost-item item-cable">⌇</i></div>
+          <div class="zone shelf"><span>shelf</span><i class="lost-item item-earbuds">⌒</i></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide why" data-speaker="2" aria-label="Root Cause and How Might We">
+      <span class="speaker"><strong>Speaker 2</strong> · 3 / 7</span>
+      <p class="eyebrow">Why it keeps happening</p>
+      <h2>Object locations constantly change,<br>but they are not continuously <span class="accent">tracked or managed.</span></h2>
+      <div class="why-grid" aria-label="Five Whys summary">
+        <div class="why-card"><b>Why 1</b><p>We do not remember where we put things.</p></div>
+        <div class="why-card"><b>Why 2</b><p>Small objects move and have no fixed place.</p></div>
+        <div class="why-card"><b>Why 3</b><p>Manual organization takes effort.</p></div>
+        <div class="why-card"><b>Why 4</b><p>Repeating it every day is hard to maintain.</p></div>
+        <div class="why-card"><b>Root cause</b><p>Locations change, but no one continuously keeps track.</p></div>
+      </div>
+      <p class="hmw"><b>How might we</b> help people easily find and organize everyday objects at home?</p>
+    </section>
+
+    <section class="slide alternatives" data-speaker="3" aria-label="Alternatives and Co-Creation">
+      <span class="speaker"><strong>Speaker 3</strong> · 4 / 7</span>
+      <p class="eyebrow">We explored alternatives</p>
+      <h2>More than one way<br>to solve the problem.</h2>
+      <div class="alternative-row" aria-label="Alternative solutions">
+        <article class="alternative"><span class="icon">□</span><div><h3>Storage</h3><p>Simple, but depends on habits.</p></div></article>
+        <article class="alternative"><span class="icon">◉</span><div><h3>Tags</h3><p>Find one item, one tag at a time.</p></div></article>
+        <article class="alternative"><span class="icon">▱</span><div><h3>Apps</h3><p>Record information, not the room.</p></div></article>
+        <article class="alternative"><span class="icon">◌</span><div><h3>Cameras</h3><p>Observe, but cannot organize.</p></div></article>
+        <article class="alternative selected"><span class="icon">◒</span><div><h3>A robot</h3><p>Can connect memory with physical action.</p></div></article>
+      </div>
+      <p class="choice-line"><b>Our choice:</b> move from simply knowing where an object is to helping in the physical space.</p>
+    </section>
+
+    <section class="slide experience" data-speaker="3" aria-label="Robot Experience">
+      <span class="speaker"><strong>Speaker 3</strong> · 5 / 7</span>
+      <div class="experience-head">
+        <div><p class="eyebrow">Smart Home Organization Robot</p><h2>Four simple actions.</h2></div>
+        <p class="small">A lightweight indoor companion for a few everyday objects — not a magical household robot.</p>
+      </div>
+      <div class="action-line" aria-label="See Remember Find Organize">
+        <article class="action"><span class="action-number">01</span><h3>SEE</h3><p>Observe the room and recognize selected objects.</p><span>◉</span></article>
+        <article class="action"><span class="action-number">02</span><h3>REMEMBER</h3><p>Keep a simple record of their recent locations.</p><span>⌁</span></article>
+        <article class="action"><span class="action-number">03</span><h3>FIND</h3><p>Help when the user needs an object.</p><span>⌕</span></article>
+        <article class="action"><span class="action-number">04</span><h3>ORGANIZE</h3><p>Support limited return-to-place actions when suitable.</p><span>↗</span></article>
+      </div>
+    </section>
+
+    <section class="slide mvp" data-speaker="4" aria-label="A believable MVP">
+      <span class="speaker"><strong>Speaker 4</strong> · 6 / 7</span>
+      <div class="mvp-copy">
+        <p class="eyebrow">A believable first version</p>
+        <h2>One dorm room.<br>A few everyday objects.</h2>
+        <p class="lead">For Students living in dormitories or shared apartments.</p>
+        <div class="mvp-points">
+          <div class="mvp-point"><i>✓</i>Keys, earphones, and charging cables</div>
+          <div class="mvp-point"><i>✓</i>Location memory and simple finding support</div>
+          <div class="mvp-point"><i>✓</i>Limited return-to-place actions when appropriate</div>
+        </div>
+      </div>
+      <div class="mvp-art" aria-label="Concept illustration of a small organization robot">
+        <div class="robot"><div class="robot-head"><div class="robot-face"><i class="robot-eye"></i><i class="robot-eye"></i></div></div><div class="robot-body"></div><i class="robot-wheel wheel-left"></i><i class="robot-wheel wheel-right"></i></div>
+        <i class="orbit-object orbit-one">⌁</i><i class="orbit-object orbit-two">⌒</i><i class="orbit-object orbit-three">⌇</i>
+        <span class="scope-tag">Focused first product</span>
+      </div>
+    </section>
+
+    <section class="slide closing-slide" data-speaker="4" aria-label="Value and Closing">
+      <span class="speaker"><strong>Speaker 4</strong> · 7 / 7</span>
+      <p class="eyebrow">The value</p>
+      <h2>Save time.<br><span class="accent">Reduce stress.</span><br>Make everyday life easier.</h2>
+      <div class="value-grid">
+        <p class="final-line">Next time you cannot find your keys, do not search the whole room. <b>Just ask your robot.</b></p>
+        <div class="value-note"><b>Business idea:</b><br>Hardware sale for a focused home-organization companion. Future services remain a possibility, not a promise.</div>
+      </div>
+      <svg class="final-key" viewBox="0 0 200 200" fill="none" aria-hidden="true"><circle cx="70" cy="76" r="38" stroke="currentColor" stroke-width="18"/><path d="M99 103L170 174M143 147L158 132M160 164L177 147" stroke="currentColor" stroke-width="18"/></svg>
+    </section>
+  </main>
+
+  <div id="counter" aria-live="polite">1 / 7</div>
+  <div id="hint">← → / Space / click to navigate</div>
+  <div id="progress" aria-hidden="true"><span></span></div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const counter = document.querySelector('#counter');
+    const progress = document.querySelector('#progress > span');
+    let current = 0;
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (['ArrowRight', ' ', 'PageDown'].includes(event.key)) {
+        event.preventDefault();
+        showSlide(current + 1);
+      }
+      if (['ArrowLeft', 'PageUp'].includes(event.key)) {
+        event.preventDefault();
+        showSlide(current - 1);
+      }
+      if (event.key === 'Home') showSlide(0);
+      if (event.key === 'End') showSlide(slides.length - 1);
+    });
+
+    document.addEventListener('click', () => showSlide(current + 1));
+    showSlide(0);
+  </script>
+</body>
+</html>
