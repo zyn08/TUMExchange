@@ -113,22 +113,25 @@
 
     /* 3 — Why */
     .why { flex-direction: column; justify-content: center; }
-    .why h2 { max-width: 15ch; }
-    .why-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; margin-top: 4vh; }
-    .why-card { min-height: 13vh; padding: 1.2rem 1.1rem; border-top: 2px solid var(--line); }
+    .why h2 { max-width: 15ch; font-size: clamp(2.55rem, 4.8vw, 5.4rem); }
+    .why-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; margin-top: 3vh; }
+    .why-card { min-height: 13vh; padding: 1rem 1.1rem; border-top: 2px solid var(--line); }
     .why-card:last-child { border-color: var(--terracotta); background: rgba(182,99,75,.08); }
-    .why-card b { display: block; margin-bottom: .6rem; color: var(--terracotta); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+    .why-card b { display: block; margin-bottom: .72rem; color: var(--terracotta); font-size: clamp(1rem, 1.45vw, 1.25rem); letter-spacing: .1em; text-transform: uppercase; }
     .why-card p { margin: 0; color: var(--muted); font-size: clamp(.75rem, 1.18vw, 1.05rem); line-height: 1.35; }
     .hmw { margin-top: 3.5vh; padding: 1.2rem 0 0; color: var(--olive); border-top: 1px solid var(--olive-light); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.2rem, 2.1vw, 2.1rem); line-height: 1.25; }
     .hmw b { color: var(--ink); }
 
     /* 4 — Alternatives */
     .alternatives { flex-direction: column; justify-content: center; }
+    .alternatives h2 { max-width: none; font-size: clamp(2.55rem, 4.6vw, 5.2rem); }
     .alternative-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; margin-top: 4vh; }
     .alternative { min-height: 25vh; padding: 1.4rem; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--line); background: rgba(255,250,242,.45); }
     .alternative .icon { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: 50%; color: var(--olive); background: var(--olive-light); font-size: 1.25rem; }
-    .alternative h3 { margin: .9rem 0 .3rem; font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+    .alternative h3 { margin: .9rem 0 .3rem; font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
     .alternative p { margin: 0; color: var(--muted); font-size: clamp(.72rem,1vw,.92rem); line-height: 1.35; }
+    .alternative:not(.selected) h3 { font-size: clamp(1.15rem, 1.8vw, 1.8rem); }
+    .alternative:not(.selected) p { font-size: clamp(.85rem, 1.2vw, 1.08rem); }
     .alternative.selected { color: var(--cream); border-color: var(--terracotta); background: var(--terracotta); box-shadow: var(--shadow); transform: translateY(-1.2rem); }
     .alternative.selected .icon { color: var(--terracotta); background: var(--cream); }
     .alternative.selected p { color: #fff0e8; }
@@ -271,10 +274,10 @@
         <p class="small">A lightweight indoor companion for a few everyday objects — not a magical household robot.</p>
       </div>
       <div class="action-line" aria-label="See Remember Find Organize">
-        <article class="action"><span class="action-number">01</span><h3>SEE</h3><p>Observe the room and recognize selected objects.</p><span>◉</span></article>
-        <article class="action"><span class="action-number">02</span><h3>REMEMBER</h3><p>Keep a simple record of their recent locations.</p><span>⌁</span></article>
-        <article class="action"><span class="action-number">03</span><h3>FIND</h3><p>Help when the user needs an object.</p><span>⌕</span></article>
-        <article class="action"><span class="action-number">04</span><h3>ORGANIZE</h3><p>Support limited return-to-place actions when suitable.</p><span>↗</span></article>
+        <article class="action"><span class="action-number">01</span><h3>See</h3><p>Observe the room and recognize selected objects.</p><span>◉</span></article>
+        <article class="action"><span class="action-number">02</span><h3>Remember</h3><p>Keep a simple record of their recent locations.</p><span>⌁</span></article>
+        <article class="action"><span class="action-number">03</span><h3>Find</h3><p>Help when the user needs an object.</p><span>⌕</span></article>
+        <article class="action"><span class="action-number">04</span><h3>Organize</h3><p>Support limited return-to-place actions when suitable.</p><span>↗</span></article>
       </div>
     </section>
 

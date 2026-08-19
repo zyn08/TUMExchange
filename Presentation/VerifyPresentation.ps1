@@ -14,7 +14,7 @@ $requiredFragments = @(
   'Where are my keys?',
   'Object locations constantly change',
   'How might we help people easily find and organize everyday objects at home?',
-  'SEE', 'REMEMBER', 'FIND', 'ORGANIZE',
+  'See', 'Remember', 'Find', 'Organize',
   'Students living in dormitories or shared apartments',
   'Hardware sale',
   'keydown',
