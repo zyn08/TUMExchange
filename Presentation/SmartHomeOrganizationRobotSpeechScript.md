@@ -70,7 +70,7 @@
 
 ### Slide 5 — *The Robot Experience* · 2:30–3:20
 
-> Our idea is a Smart Home Organization Robot.
+> Our idea is a Smart Home Organization Robot — a small indoor mobile robot.
 >
 > We explain it with four simple actions: see, remember, find, and organize.
 >
